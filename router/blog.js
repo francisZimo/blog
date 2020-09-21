@@ -1,10 +1,18 @@
+const { getBlogList } = require('../controller/blog')
+const { SuccessModal, ErrorModal } = require('../model/index')
 const blogRouterHandle = (req, res) => {
 
     const method = req.method
     if (method === 'GET' && req.path === '/api/blog/list') {
-        return {
-            msg: '获取博客列表'
+        const query = req.query
+        let author = query.author || ''
+        let keyword = query.keyword || ''
+        const listData = getBlogList(author, keyword)
+        if (listData) {
+            return new SuccessModal(listData)
         }
+        return new ErrorModal('处理数据失败')
+
     }
     if (method === 'GET' && req.path === '/api/blog/detail') {
         return {

@@ -13,6 +13,34 @@ const getBlogList = (author, password) => {
         author: 'z2'
     }]
 }
+
+const getBlogDetail = (id) => {
+    return {
+        title: '最强战力',
+        content: 'zz最强'
+    }
+}
+
+const newBlog = (blogData) => {
+    return {
+        id: 2,
+        content: 'zimo'
+    }
+}
+
+const updateBlog = (id, content) => {
+    return true
+}
+
+const deleteBlog = (id) => {
+    return true
+}
+
+
 module.exports = {
-    getBlogList
+    getBlogList,
+    getBlogDetail,
+    newBlog,
+    updateBlog,
+    deleteBlog
 }

@@ -1,10 +1,11 @@
-const { getBlogList } = require('../controller/blog')
+const { getBlogList, getBlogDetail, newBlog, updateBlog, deleteBlog } = require('../controller/blog')
 const { SuccessModal, ErrorModal } = require('../model/index')
 const blogRouterHandle = (req, res) => {
 
     const method = req.method
+    const query = req.query
     if (method === 'GET' && req.path === '/api/blog/list') {
-        const query = req.query
+
         let author = query.author || ''
         let keyword = query.keyword || ''
         const listData = getBlogList(author, keyword)
@@ -15,24 +16,31 @@ const blogRouterHandle = (req, res) => {
 
     }
     if (method === 'GET' && req.path === '/api/blog/detail') {
-        return {
-            msg: '获取一篇博客的内容'
+        let id = query.id
+        const dataDetail = getBlogDetail(id)
+        if (dataDetail) {
+            return new SuccessModal(dataDetail)
         }
     }
     if (method === 'POST' && req.path === '/api/blog/new') {
-        return {
-            msg: '新增博客'
+        let data = newBlog(req.body)
+        if (data) {
+            return new SuccessModal(data)
         }
     }
     if (method === 'POST' && req.path === '/api/blog/update') {
-        return {
-            msg: '更新博客'
+        let data = updateBlog(query.id, req.body)
+        if (!data) {
+            return new ErrorModal('编辑失败')
         }
+        return new SuccessModal()
     }
     if (method === 'POST' && req.path === '/api/blog/del') {
-        return {
-            msg: '删除博客'
+        let data = deleteBlog(query.id)
+        if (!data) {
+            return new ErrorModal('删除失败')
         }
+        return new SuccessModal()
     }
 }
 

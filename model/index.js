@@ -2,6 +2,7 @@ class BaseModel {
     constructor(data, msg) {
         if (typeof data === 'string') {
             this.msg = data
+            return
         }
         if (data) {
             this.data = data

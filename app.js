@@ -1,6 +1,7 @@
 const blogRouter = require('./router/blog')
 const userRouter = require('./router/user')
 const queryString = require('querystring')
+const _ = require('lodash')
     // const parse
 
 // 用于获取post数据
@@ -38,17 +39,20 @@ const serverHandle = (req, res) => {
     req.path = req.url.split('?')[0]
         // 解析query
     req.query = queryString.parse(req.url.split('?')[1] || {})
-
-    //处理postData
+        //处理postData
     getPostData(req).then(postData => {
         req.body = postData
+            // 处理blog路由
+        let blogResult = blogRouter(req, res)
 
-        // 处理blog路由
-        let blogData = blogRouter(req, res)
-        if (blogData) {
-            res.end(JSON.stringify(blogData))
+        if (blogResult) {
+            blogResult.then(result => {
+                res.end(JSON.stringify(result))
+
+            })
             return
         }
+
         let userData = userRouter(req, res)
         if (userData) {
             res.end(JSON.stringify(userData))

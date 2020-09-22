@@ -1,17 +1,18 @@
-const getBlogList = (author, password) => {
-    return [{
-        id: 1,
-        title: '天瑞',
-        content: 'xxxx',
-        createTime: 1600424143036,
-        author: 'z1'
-    }, {
-        id: 2,
-        title: '天瑞2',
-        content: '222',
-        createTime: 1600424160752,
-        author: 'z2'
-    }]
+const { execSql } = require('../db/index')
+const _ = require('lodash')
+const getBlogList = (author, keyword) => {
+    let sql = 'select * from blogs where 1=1   '
+    if (author) {
+        sql += `and author =  '${author}' `
+    }
+    if (keyword) {
+        sql += `and title like '%${keyword}%' `
+    }
+    sql += 'order by createtime desc;'
+
+    return execSql(sql).then(result => {
+        return result
+    })
 }
 
 const getBlogDetail = (id) => {

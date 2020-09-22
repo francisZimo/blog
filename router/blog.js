@@ -1,19 +1,20 @@
 const { getBlogList, getBlogDetail, newBlog, updateBlog, deleteBlog } = require('../controller/blog')
 const { SuccessModal, ErrorModal } = require('../model/index')
+const { execSql } = require('../db/index')
+
 const blogRouterHandle = (req, res) => {
 
     const method = req.method
     const query = req.query
     if (method === 'GET' && req.path === '/api/blog/list') {
-
         let author = query.author || ''
         let keyword = query.keyword || ''
-        const listData = getBlogList(author, keyword)
-        if (listData) {
-            return new SuccessModal(listData)
-        }
-        return new ErrorModal('处理数据失败')
-
+        return getBlogList(author, keyword).then(result => {
+            if (result) {
+                return new SuccessModal(result)
+            }
+            return new ErrorModal('处理数据失败')
+        })
     }
     if (method === 'GET' && req.path === '/api/blog/detail') {
         let id = query.id

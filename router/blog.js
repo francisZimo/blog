@@ -6,6 +6,7 @@ const blogRouterHandle = (req, res) => {
 
     const method = req.method
     const query = req.query
+    let author = 'francis'
     if (method === 'GET' && req.path === '/api/blog/list') {
         let author = query.author || ''
         let keyword = query.keyword || ''
@@ -18,30 +19,46 @@ const blogRouterHandle = (req, res) => {
     }
     if (method === 'GET' && req.path === '/api/blog/detail') {
         let id = query.id
-        const dataDetail = getBlogDetail(id)
-        if (dataDetail) {
-            return new SuccessModal(dataDetail)
-        }
+        return getBlogDetail(id).then(result => {
+            if (result) {
+                return new SuccessModal(result)
+            }
+            return new ErrorModal('处理数据失败')
+        })
+
     }
     if (method === 'POST' && req.path === '/api/blog/new') {
-        let data = newBlog(req.body)
-        if (data) {
-            return new SuccessModal(data)
+        const { body } = req
+
+        let blogData = {
+            title: body.title,
+            content: body.content,
+            createtime: Date.now(),
+            author: req.author
         }
+        return newBlog(blogData).then(result => {
+            return new SuccessModal(result)
+        })
+
     }
     if (method === 'POST' && req.path === '/api/blog/update') {
-        let data = updateBlog(query.id, req.body)
-        if (!data) {
-            return new ErrorModal('编辑失败')
-        }
-        return new SuccessModal()
+
+        return updateBlog(query.id, author, req.body).then(result => {
+            if (!result) {
+                return new ErrorModal('更新失败')
+            }
+            return new SuccessModal(result)
+        })
+
     }
     if (method === 'POST' && req.path === '/api/blog/del') {
-        let data = deleteBlog(query.id)
-        if (!data) {
-            return new ErrorModal('删除失败')
-        }
-        return new SuccessModal()
+        return deleteBlog(query.id, author).then(result => {
+            if (!result) {
+                return new ErrorModal('删除失败')
+            }
+            return new SuccessModal()
+        })
+
     }
 }
 

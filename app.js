@@ -42,6 +42,7 @@ const serverHandle = (req, res) => {
         //处理postData
     getPostData(req).then(postData => {
         req.body = postData
+        req.author = 'francis'
             // 处理blog路由
         let blogResult = blogRouter(req, res)
 
@@ -55,7 +56,9 @@ const serverHandle = (req, res) => {
 
         let userData = userRouter(req, res)
         if (userData) {
-            res.end(JSON.stringify(userData))
+            userData.then(result => {
+                res.end(JSON.stringify(result))
+            })
             return
         }
         res.writeHead(404, {

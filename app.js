@@ -1,6 +1,7 @@
 const blogRouter = require('./router/blog')
 const userRouter = require('./router/user')
 const queryString = require('querystring')
+const {set, get } = require("./db/redis")
 const _ = require('lodash')
     // 获取cookie的过期时间
 const getCookieExpires = () => {
@@ -52,27 +53,51 @@ const serverHandle = (req, res) => {
     const cookieStr = req.headers.cookie || '';
     req.cookie = {}
     cookieStr.split(';').forEach(item => {
-        req.cookie[item[0].trim()] = item[1].trim()
+        let data = item.split('=')
+        let key = data[0].trim()
+        let value = data[1].trim()
+
+        req.cookie[key] = value
     });
 
+
     // 解析session
+    // let needSetCookie = false // 是否需要设置cookie
+    // let userId = req.cookie.userid
+    // if (userId) {
+    //     if (!SESSION_DADA[userId]) {
+    //         SESSION_DADA[userId] = {}
+    //     }
+    // } else {
+    //     needSetCookie = true
+    //     userId = `${Date.now()}_${Math.random()}`
+    //     SESSION_DADA[userId] = {}
+
+    // }
+    // req.session = SESSION_DADA[userId]
+
+    // 使用redis
     let needSetCookie = false // 是否需要设置cookie
+
     let userId = req.cookie.userid
-    if (userId) {
-        if (!SESSION_DADA[userId]) {
-            SESSION_DADA[userId] = {}
+    if (!userId) {
+
+        needSetCookie = true;
+        userId = `${Date.now()}_${Math.random()}`
+        set(userId, {})
+    }
+    req.sessionId = userId
+    get(req.sessionId).then(sessionData => {
+        if (sessionData === null) {
+            // 初始化session
+            set(req.sessionId, {})
+            req.session = {}
+        } else {
+            req.session = sessionData
         }
 
-    } else {
-        needSetCookie = true
-        userId = `${Date.now()}_${Math.random()}`
-        SESSION_DADA[userId] = {}
-
-    }
-    req.session = SESSION_DADA[userId]
-
-    //处理postData
-    getPostData(req).then(postData => {
+        return getPostData(req) // 处理postData
+    }).then(postData => {
         req.body = postData
         req.author = 'francis'
             // 处理blog路由

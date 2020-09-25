@@ -2,12 +2,24 @@ const { getBlogList, getBlogDetail, newBlog, updateBlog, deleteBlog } = require(
 const { SuccessModal, ErrorModal } = require('../model/index')
 const { execSql } = require('../db/index')
 
+const checkLogin = (req) => {
+    if (!req.session.username) {
+        return Promise.resolve(new ErrorModal('尚未登录'))
+    }
+}
+
 const blogRouterHandle = (req, res) => {
 
     const method = req.method
     const query = req.query
     let author = 'francis'
     if (method === 'GET' && req.path === '/api/blog/list') {
+        const checkResult = checkLogin(req)
+        if (checkResult) {
+            console.log('checkResult,',
+                checkResult)
+            return checkResult
+        }
         let author = query.author || ''
         let keyword = query.keyword || ''
         return getBlogList(author, keyword).then(result => {

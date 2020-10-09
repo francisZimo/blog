@@ -22,7 +22,10 @@ const getBlogDetail = (id) => {
     }
 
     return execSql(sql).then(result => {
-        return result
+        if (result) {
+            return result[0]
+        }
+        return null
     })
 }
 

@@ -14,8 +14,8 @@ const getCookieExpires = () => {
 const userRouterHandle = (req, res) => {
 
     const method = req.method
-    if (method === 'GET' && req.path === '/api/user/login') {
-        const obj = { username: req.query.username, password: req.query.password }
+    if (method === 'POST' && req.path === '/api/user/login') {
+        const obj = { username: req.body.username, password: req.body.password }
         return userLogin(obj).then(result => {
             if (result) {
                 // 设置session
@@ -23,8 +23,6 @@ const userRouterHandle = (req, res) => {
                 req.session.realname = result.realname;
                 // 同步到redis中
                 set(req.sessionId, result)
-
-                // res.setHeader('Set-Cookie', `username=${result.username} ; path=/; httpOnly; expires=${getCookieExpires()}`)
                 return new SuccessModal(result)
             }
             return new ErrorModal('登录失败')

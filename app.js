@@ -99,7 +99,7 @@ const serverHandle = (req, res) => {
         return getPostData(req) // 处理postData
     }).then(postData => {
         req.body = postData
-        req.author = 'francis'
+        req.author = req.session.username
             // 处理blog路由
         let blogResult = blogRouter(req, res)
 

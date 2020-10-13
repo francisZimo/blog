@@ -1,6 +1,7 @@
 const { getBlogList, getBlogDetail, newBlog, updateBlog, deleteBlog } = require('../controller/blog')
 const { SuccessModal, ErrorModal } = require('../model/index')
 const { execSql } = require('../db/index')
+const xss = require('xss')
 
 const checkLogin = (req) => {
     if (!req.session.username) {
@@ -57,7 +58,7 @@ const blogRouterHandle = (req, res) => {
         const { body } = req
 
         let blogData = {
-            title: body.title,
+            title: xss(body.title),
             content: body.content,
             createtime: Date.now(),
             author: req.author

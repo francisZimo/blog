@@ -1,0 +1,436 @@
+### antd 表单组件设计与实现---P1
+
+> 文章目的：意在分析antd官网form表单的结构，一步步理解其构造思路，模仿写出一个简易版的form表单。`P1(第一篇)`--- 了解表单组件基本的`数据收集`,`数据校验`,`数据提交`等功能
+#### 一、antd组件分析
+点击[antd官网表单组件链接](https://ant.design/components/form-cn/#header)查看官网示例
+##### 简易版antd表单使用--代码演示：
+```javascript
+import React from 'react'
+import { Form, Icon, Input, Button } from 'antd';
+
+class MyForm extends React.Component {
+  handleSubmit = e => {
+    e.preventDefault();
+    const {getFieldsValue,getFieldValue} =  this.props.form;
+    console.log(getFieldsValue(),getFieldValue('username'))
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        console.log('Received values of form: ', values);
+      }
+    });
+  };
+
+  render() {
+    const { getFieldDecorator } = this.props.form;
+    return (
+      <Form layout="inline" onSubmit={this.handleSubmit}>
+        <Form.Item >
+          {getFieldDecorator('username', {
+            rules: [{ required: true, message: 'Please input your username!' }],
+          })(
+            <Input
+              prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+              placeholder="Username"
+            />,
+          )}
+        </Form.Item>
+        <Form.Item >
+          {getFieldDecorator('password', {
+            rules: [{ required: true, message: 'Please input your Password!' }],
+          })(
+            <Input
+              prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+              type="password"
+              placeholder="Password"
+            />,
+          )}
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit" >
+            Log in
+          </Button>
+        </Form.Item>
+      </Form>
+    );
+  }
+}
+const WrappedForm=Form.create()(MyForm)
+export default WrappedForm;
+```
+
+##### 效果演示：
+![Alt text](./1581575352686.png)
+
+
+##### 分析
+
+1. Form.create 处理后的表单具有自动收集数据并校验的功能
+2. 经过 getFieldDecorator 包装的控件，表单控件会自动添加 value， onChange。数据同步将被 Form 接管，用于和表单进行双向绑定。
+3. getFieldsValue和getFieldValue均可获取包装控件值
+3. validateFields可以校验并获取输入域的值与 Error
+
+
+####二、 动手写个简易版的表单组件
+
+（1）首先创建个高阶函数FormCreate(相当于Form.create())，用来包装表单组件
+```javascript
+// FormCreate组件
+import React, { Component } from 'react'
+const FormCreate=Cmp=>{
+  return class extends Component{
+    constructor (props){
+      super(props)
+    }
+    render () {
+      return <Cmp />
+    }
+  }
+}
+export default FormCreate
+```
+
+
+```javascript
+// formPage页面
+import React, { Component } from 'react'
+import FormCreate from './FormCreate'
+import styles from './custom.module.scss'
+class FormPage extends Component {
+  render () {
+    return (
+      <div>
+        <h3>custom表单组件</h3>
+        <div className={styles.formItem}>
+          <input   type="text" placeholder='请输入用户名'/>
+        </div>
+        <div className={styles.formItem}>
+          <input  type="password" placeholder='请输入密码' />
+        </div>
+        <button  className={styles.fButton}>提交</button>
+      </div>
+    )
+  }
+}
+export default FormCreate(FormPage)
+```
+（2）添加getFieldDecorator函数，使其能够接管包装组件（input）的值，统一管理表单中包装组件的值。
+```javascript
+// FormCreate组件
+import React, { Component } from 'react'
+const FormCreate=Cmp=>{
+  return class extends Component{
+    constructor (props){
+      super(props)
+      this.state={} // 做表单数据统一管理
+    }
+
+    inputChange=(event)=>{
+      let value=event.target.value;
+      let name=event.target.name;
+      console.log('value',value)
+      console.log('name',name)
+      this.setState({
+        [name]:value   // 将输入的字段名称对应的值接管过来，方便其他地方使用
+      })
+    }
+
+    getFieldDecorator=(field,options)=>{
+      return InputCmp=>{
+        return React.cloneElement( // 封装组件的时候不建议在原来的组件上做操作，此处用cloneElement来创建一个新组件替换原来的组件
+          InputCmp,{
+            name:field, // 动态属性可以是任意名字,此处目的是在change事件中可以通过e.target.name获取传入的field名称。 例如：替换名字为flag，渲染出的元素为 <input flag='userName' value='admin'>
+            value:this.state[field]||"", // 默认值给个空值
+            onChange:this.inputChange
+          }
+        )
+      }
+    }
+    render () {
+      return (
+          <Cmp
+            getFieldDecorator={this.getFieldDecorator}
+          />
+        )
+    }
+  }
+}
+export default FormCreate
+```
+
+
+```javascript
+//FormPage页面
+import React, { Component } from 'react'
+import FormCreate from './FormCreate'
+import styles from './custom.module.scss'
+
+class FormPage extends Component {
+  render () {
+    const {getFieldDecorator}=this.props;
+    return (
+      <div>
+        <h3>custom表单组件</h3>
+        <div className={styles.formItem}>
+          {
+            getFieldDecorator('userName')(
+              <input type="text" placeholder='请输入用户名'/>
+            )
+          }
+        </div>
+        <div className={styles.formItem}>
+          {
+            getFieldDecorator('password')(
+              <input  type="password" placeholder='请输入密码' />
+            )
+          }
+        </div>
+        <button  className={styles.fButton}>提交</button>
+      </div>
+    )
+  }
+}
+
+export default FormCreate(FormPage)
+
+```
+（3）通过getFieldsValue和getFieldValue可以获得包装组件的值
+```javascript
+// FormCreate组件
+import React, { Component } from 'react'
+const FormCreate=Cmp=>{
+  return class extends Component{
+    constructor (props){
+      super(props)
+      this.state={} // 做表单数据统一管理
+    }
+
+    getFieldValue=(field)=>{
+      return this.state[field]
+    }
+    getFieldsValue=()=>{
+      return this.state;
+    }
+    
+    inputChange=(event)=>{
+      let value=event.target.value;
+      let name=event.target.name;
+      this.setState({
+        [name]:value   // 将输入的字段名称对应的值接管过来，方便其他地方使用
+      })
+    }
+
+    getFieldDecorator=(field,options)=>{
+      return InputCmp=>{
+        return React.cloneElement( // 封装组件的时候不建议在原来的组件上做操作，此处用cloneElement来创建一个新组件替换原来的组件
+          InputCmp,{
+            name:field, // 动态属性可以是任意名字,此处目的是在change事件中可以通过e.target.name获取传入的field名称。 例如：替换名字为flag，渲染出的元素为 <input flag='userName' value='admin'>
+            value:this.state[field]||"", // 默认值给个空值
+            onChange:this.inputChange
+          }
+        )
+      }
+    }
+
+    render () {
+      return (
+          <Cmp
+            getFieldDecorator={this.getFieldDecorator}
+            getFieldValue={this.getFieldValue}
+            getFieldsValue={this.getFieldsValue}
+          />
+        )
+    }
+  }
+}
+
+export default FormCreate
+```
+```javascript
+// FormPage页面
+import React, { Component } from 'react'
+import FormCreate from './FormCreate'
+import styles from './custom.module.scss'
+
+class FormPage extends Component {
+
+  handleSubmit=()=>{
+    const {getFieldValue,getFieldsValue}=this.props;
+    console.log(getFieldValue('userName'),getFieldsValue(),'===log')  // admin {userName: "admin", password: "123456"} ===log
+  }
+
+  render () {
+    const {getFieldDecorator}=this.props;
+    return (
+      <div>
+        <h3>custom表单组件</h3>
+        <div className={styles.formItem}>
+          {
+            getFieldDecorator('userName')(
+              <input type="text" placeholder='请输入用户名'/>
+            )
+          }
+        </div>
+        <div className={styles.formItem}>
+          {
+            getFieldDecorator('password')(
+              <input  type="password" placeholder='请输入密码' />
+            )
+          }
+        </div>
+        <button  className={styles.fButton} onClick={this.handleSubmit}>提交</button>
+      </div>
+    )
+  }
+}
+export default FormCreate(FormPage)
+```
+（4）验证表单-- 仅针对[required:true,msg:'请输入有效信息'}]进行模拟验证
+```javascript
+//FormCreate组件
+
+import React, { Component } from 'react'
+
+const FormCreate=Cmp=>{
+  return class extends Component{
+    constructor (props){
+      super(props)
+      this.state={} // 做表单数据统一管理
+      this.options={}
+    }
+
+    validateFields=(callback)=>{
+      const state={...this.state}
+      const errors=[] //存储错误信息
+      const options =this.options
+      for(let key in options){
+        const {rules}=options[key]
+        if(rules){
+          rules.forEach(item=>{
+            if(item.require===true){
+              if(!state[key]){
+                errors.push({[key]:item.msg})
+              }
+            }
+          })
+        }
+      }
+      if(errors.length>0){
+        callback(errors,state) //存在错误，则返回错误信息
+      }else{
+        callback(undefined,state)
+      }
+    }
+
+    getFieldValue=(field)=>{
+      return this.state[field]
+    }
+
+    getFieldsValue=()=>{
+      return this.state;
+    }
+
+
+    inputChange=(event)=>{
+      let value=event.target.value;
+      let name=event.target.name;
+      this.setState({
+        [name]:value   // 将输入的字段名称对应的值接管过来，方便其他地方使用
+      })
+    }
+
+    getFieldDecorator=(field,options)=>{
+      this.options[field]=options // 记录属性对应的options配置信息
+      return InputCmp=>{
+        return React.cloneElement( // 封装组件的时候不建议在原来的组件上做操作，此处用cloneElement来创建一个新组件替换原来的组件
+          InputCmp,{
+            name:field, // 动态属性可以是任意名字,此处目的是在change事件中可以通过e.target.name获取传入的field名称。 例如：替换名字为flag，渲染出的元素为 <input flag='userName' value='admin'>
+            value:this.state[field]||"", // 默认值给个空值
+            onChange:this.inputChange
+          }
+        )
+      }
+    }
+
+    render () {
+      return (
+          <Cmp
+            getFieldDecorator={this.getFieldDecorator}
+            getFieldValue={this.getFieldValue}
+            getFieldsValue={this.getFieldsValue}
+            validateFields={this.validateFields}
+          />
+        )
+    }
+  }
+}
+export default FormCreate
+```
+```javascript
+//FormPage页面
+import React, { Component } from 'react'
+import FormCreate from './FormCreate'
+import styles from './custom.module.scss'
+
+class FormPage extends Component {
+
+  handleSubmit=()=>{
+    const {getFieldValue,getFieldsValue,validateFields}=this.props;
+    console.log(getFieldValue('userName'),getFieldsValue(),'===log')  // admin {userName: "admin", password: "123456"} ===log
+    validateFields((err,values)=>{
+      if(err){
+        console.log('验证失败',err)
+      }else{
+        console.log('验证成功',values)
+      }
+    })
+  }
+
+  render () {
+    const {getFieldDecorator}=this.props;
+    const userRules=[{require: true,msg:'请填写用户名'}]
+    const passwordRules=[{require: true,msg:'请输入密码'}]
+    return (
+      <div>
+        <h3>custom表单组件</h3>
+        <div className={styles.formItem}>
+          {
+            getFieldDecorator('userName',{rules:userRules})(
+              <input type="text" placeholder='请输入用户名'/>
+            )
+          }
+        </div>
+        <div className={styles.formItem}>
+          {
+            getFieldDecorator('password',{rules:passwordRules})(
+              <input  type="password" placeholder='请输入密码' />
+            )
+          }
+        </div>
+        <button  className={styles.fButton} onClick={this.handleSubmit}>提交</button>
+      </div>
+    )
+  }
+}
+
+export default FormCreate(FormPage)
+```
+效果演示：
+![Alt text](./1581602117075.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

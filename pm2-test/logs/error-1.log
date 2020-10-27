@@ -1,0 +1,11 @@
+2020-10-27 06:08:03: Error: 模式失败
+    at app.get (/Users/francis/Documents/个人/node/myPro/pm2-test/app.js:13:11)
+    at Layer.handle [as handle_request] (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/layer.js:95:5)
+    at next (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/route.js:137:13)
+    at Route.dispatch (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/route.js:112:3)
+    at Layer.handle [as handle_request] (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/layer.js:95:5)
+    at /Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/index.js:281:22
+    at Function.process_params (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/index.js:335:12)
+    at next (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/index.js:275:10)
+    at expressInit (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/middleware/init.js:40:5)
+    at Layer.handle [as handle_request] (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/layer.js:95:5)

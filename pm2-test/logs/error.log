@@ -1,0 +1,36 @@
+2020-10-27 05:50:04: 权限失败
+2020-10-27 05:50:05: 权限失败
+2020-10-27 05:50:09: Error: 模式失败
+2020-10-27 05:50:09:     at app.get (/Users/francis/Documents/个人/node/myPro/pm2-test/app.js:13:11)
+2020-10-27 05:50:09:     at Layer.handle [as handle_request] (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/layer.js:95:5)
+2020-10-27 05:50:09:     at next (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/route.js:137:13)
+2020-10-27 05:50:09:     at Route.dispatch (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/route.js:112:3)
+2020-10-27 05:50:09:     at Layer.handle [as handle_request] (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/layer.js:95:5)
+2020-10-27 05:50:09:     at /Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/index.js:281:22
+2020-10-27 05:50:09:     at Function.process_params (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/index.js:335:12)
+2020-10-27 05:50:09:     at next (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/index.js:275:10)
+2020-10-27 05:50:09:     at expressInit (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/middleware/init.js:40:5)
+2020-10-27 05:50:09:     at Layer.handle [as handle_request] (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/layer.js:95:5)
+2020-10-27 05:50:11: Error: 模式失败
+2020-10-27 05:50:11:     at app.get (/Users/francis/Documents/个人/node/myPro/pm2-test/app.js:13:11)
+2020-10-27 05:50:11:     at Layer.handle [as handle_request] (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/layer.js:95:5)
+2020-10-27 05:50:11:     at next (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/route.js:137:13)
+2020-10-27 05:50:11:     at Route.dispatch (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/route.js:112:3)
+2020-10-27 05:50:11:     at Layer.handle [as handle_request] (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/layer.js:95:5)
+2020-10-27 05:50:11:     at /Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/index.js:281:22
+2020-10-27 05:50:11:     at Function.process_params (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/index.js:335:12)
+2020-10-27 05:50:11:     at next (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/index.js:275:10)
+2020-10-27 05:50:11:     at expressInit (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/middleware/init.js:40:5)
+2020-10-27 05:50:11:     at Layer.handle [as handle_request] (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/layer.js:95:5)
+2020-10-27 05:50:12: Error: 模式失败
+2020-10-27 05:50:12:     at app.get (/Users/francis/Documents/个人/node/myPro/pm2-test/app.js:13:11)
+2020-10-27 05:50:12:     at Layer.handle [as handle_request] (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/layer.js:95:5)
+2020-10-27 05:50:12:     at next (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/route.js:137:13)
+2020-10-27 05:50:12:     at Route.dispatch (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/route.js:112:3)
+2020-10-27 05:50:12:     at Layer.handle [as handle_request] (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/layer.js:95:5)
+2020-10-27 05:50:12:     at /Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/index.js:281:22
+2020-10-27 05:50:12:     at Function.process_params (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/index.js:335:12)
+2020-10-27 05:50:12:     at next (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/index.js:275:10)
+2020-10-27 05:50:12:     at expressInit (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/middleware/init.js:40:5)
+2020-10-27 05:50:12:     at Layer.handle [as handle_request] (/Users/francis/Documents/个人/node/myPro/pm2-test/node_modules/_express@4.17.1@express/lib/router/layer.js:95:5)
+2020-10-27 06:04:58: 权限失败

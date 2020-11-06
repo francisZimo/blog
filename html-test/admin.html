@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,22 +11,27 @@
             margin: 0 20px;
             line-height: 1;
         }
+        
         a {
             text-decoration-line: none;
             cursor: pointer;
         }
+        
         table {
             border: 1px solid #ccc;
         }
+        
         table th {
             text-align: left;
             background-color: #f1f1f1;
-        } 
+        }
+        
         table td:nth-child(1) {
             width: 300px;
         }
     </style>
 </head>
+
 <body>
     <h1 style="border-bottom: 1px solid #ccc; padding-bottom: 10px;">管理中心</h1>
     <p>
@@ -79,7 +85,7 @@
         const $tableContainer = $('#table-container')
 
         // 拼接接口 url
-        let url = '/api/blog/list?isadmin=1'  // 增加一个 isadmin=1 参数，使用登录者的用户名，后端也需要修改 ！！！
+        let url = '/api/blog/list?isadmin=1' // 增加一个 isadmin=1 参数，使用登录者的用户名，后端也需要修改 ！！！
         const urlParams = getUrlParams()
         if (urlParams.keyword) {
             url += '&keyword=' + urlParams.keyword
@@ -98,13 +104,13 @@
                 $tableContainer.append($(`
                     <tr>
                         <td>
-                            <a href="/detail.html?id=${item.id}" target="_blank">${item.title}</a>
+                            <a href="/detail.html?id=${item.id||item._id}" target="_blank">${item.title}</a>
                         </td>
                         <td>
-                            <a href="/edit.html?id=${item.id}">编辑</a>
+                            <a href="/edit.html?id=${item.id||item._id}">编辑</a>
                         </td>
                         <td>
-                            <a data-id="${item.id}" class="item-del">删除</a>
+                            <a data-id="${item.id||item._id}" class="item-del">删除</a>
                         </td>
                     </tr>
                 `))
@@ -135,7 +141,7 @@
                 })
             }
         })
-
     </script>
 </body>
+
 </html>
